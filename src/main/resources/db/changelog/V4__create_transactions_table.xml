@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+        <changeSet id="4" author="bank">
+            <createTable tableName="transactions">
+
+                <column name="id" type="BIGINT" autoIncrement="true">
+                    <constraints primaryKey="true" nullable="false"/>
+                </column>
+
+                <column name="from_account_id" type="BIGINT">
+                    <constraints nullable="false" foreignKeyName="fk_first_account_transaction"
+                                 references="accounts(id)"/>
+                </column>
+
+                <column name="to_account_id" type="BIGINT">
+                    <constraints nullable="false" foreignKeyName="fk_second_account_transaction"
+                                 references="accounts(id)"/>
+                </column>
+
+                <column name="amount" type="DECIMAL(19,2)">
+                    <constraints nullable="false"/>
+                </column>
+
+                <column name="currency" type="VARCHAR(3)">
+                    <constraints nullable="false"/>
+                </column>
+
+                <column name="created_at" type="TIMESTAMP">
+                    <constraints nullable="false"/>
+                </column>
+
+            </createTable>
+        </changeSet>
+
+</databaseChangeLog>

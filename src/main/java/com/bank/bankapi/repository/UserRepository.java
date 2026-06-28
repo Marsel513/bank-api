@@ -1,0 +1,13 @@
+package com.bank.bankapi.repository;
+
+import com.bank.bankapi.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByPhoneNumber(String phoneNumber);
+
+}

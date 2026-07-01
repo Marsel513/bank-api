@@ -20,6 +20,9 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public void register(RegisterRequest registerRequest){
+        if(userRepository.findByPhoneNumber(registerRequest.getPhoneNumber()).isPresent()){
+            throw new RuntimeException("User is already registered");
+        }
         User user = new User();
 
         user.setFullName(registerRequest.getFullName());
@@ -50,14 +53,7 @@ public class UserService {
 
     }
 
-//    //CHANGE PASSWORD VIA SMS ON PHONE NUMBER
-//    public void changeUserPassword(PasswordChangeRequest request){
-//        User user = userRepository.findByPhoneNumber(request.getPhoneNumber())
-//                .orElseThrow(() -> new RuntimeException("User is not found"));
-//
-//
-//    }
-//
+
     public void changeUserPin(PinChangeRequest request, User user){
         if(passwordEncoder.matches(request.getPassword(), user.getPassword())){
 

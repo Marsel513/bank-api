@@ -1,8 +1,6 @@
 package com.bank.bankapi.service;
 
-import com.bank.bankapi.dto.LoginRequest;
-import com.bank.bankapi.dto.LoginResponse;
-import com.bank.bankapi.dto.RegisterRequest;
+import com.bank.bankapi.dto.*;
 import com.bank.bankapi.entity.User;
 import com.bank.bankapi.repository.UserRepository;
 import com.bank.bankapi.security.JwtService;
@@ -11,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+
 
 @Service
 public class UserService {
@@ -51,4 +49,28 @@ public class UserService {
         }
 
     }
+
+//    //CHANGE PASSWORD VIA SMS ON PHONE NUMBER
+//    public void changeUserPassword(PasswordChangeRequest request){
+//        User user = userRepository.findByPhoneNumber(request.getPhoneNumber())
+//                .orElseThrow(() -> new RuntimeException("User is not found"));
+//
+//
+//    }
+//
+    public void changeUserPin(PinChangeRequest request, User user){
+        if(passwordEncoder.matches(request.getPassword(), user.getPassword())){
+            if(user.getPin().equals(request.getNewPin())){
+                throw new RuntimeException("Your pin equals your new pin");
+            }
+            else{
+                user.setPin(request.getNewPin());
+                userRepository.save(user);
+            }
+        }
+        else {
+            throw new RuntimeException("Password is not correct");
+        }
+    }
+
 }

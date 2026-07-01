@@ -21,7 +21,7 @@
             </column>
             <column name="created_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
-        </column>
+            </column>
         </createTable>
     </changeSet>
 </databaseChangeLog>

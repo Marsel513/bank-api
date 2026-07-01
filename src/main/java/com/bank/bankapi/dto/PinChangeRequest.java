@@ -7,13 +7,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginRequest {
-
-    @NotBlank
-    @Pattern(regexp = "^\\+?[1-9]\\d{9,14}$")
-    private String phoneNumber;
+public class PinChangeRequest {
 
     @NotBlank
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$")
     private String password;
+
+    @NotBlank
+    @Pattern(regexp = "^\\d{4,6}$")
+    private String newPin;
 }

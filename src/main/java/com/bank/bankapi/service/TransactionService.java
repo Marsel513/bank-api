@@ -28,6 +28,9 @@ public class TransactionService {
     @Autowired
     AccountRepository accountRepository;
 
+    @Autowired
+    ConversionService conversionService;
+
     @Transactional
     public TransactionalResponse transfer(User user, TransferRequest request) {
         if (request.getFromAccountId().equals(request.getToAccountId())) {
@@ -70,7 +73,7 @@ public class TransactionService {
         }
 
         if (!fromAccount.getCurrency().equals(toAccount.getCurrency())) {
-            throw new RuntimeException("Transfers between different currencies are forbidden");
+            return transferBetweenCurrencies(fromAccount, toAccount, request.getAmount());
         }
 
         BigDecimal amount = request.getAmount();
@@ -121,6 +124,34 @@ public class TransactionService {
             userTransactionalsResponses.add(response);
         }
         return userTransactionalsResponses;
+    }
+
+
+    private TransactionalResponse transferBetweenCurrencies(Account from,  Account to, BigDecimal amount){
+        if(from.getBalance().compareTo(amount) < 0){
+            throw new RuntimeException("Insufficient funds");
+        }
+        from.setBalance(from.getBalance().subtract(amount));
+        to.setBalance(to.getBalance().add(conversionService.convert(from.getCurrency(), to.getCurrency(), amount)));
+        accountRepository.save(from);
+        accountRepository.save(to);
+        Transaction transaction = new Transaction();
+        transaction.setFromAccount(from);
+        transaction.setToAccount(to);
+        transaction.setAmount(amount);
+        transaction.setCurrency(from.getCurrency());
+        transaction.setCreatedAt(LocalDateTime.now());
+        transactionRepository.save(transaction);
+
+        return new TransactionalResponse(
+                transaction.getId(),
+                transaction.getAmount(),
+                transaction.getCurrency(),
+                transaction.getCreatedAt(),
+                from.getId(),
+                to.getId()
+        );
+
     }
 
 }

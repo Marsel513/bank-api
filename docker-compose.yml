@@ -19,5 +19,11 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     depends_on:
       - postgres
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"

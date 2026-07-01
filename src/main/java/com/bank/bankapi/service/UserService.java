@@ -60,7 +60,8 @@ public class UserService {
 //
     public void changeUserPin(PinChangeRequest request, User user){
         if(passwordEncoder.matches(request.getPassword(), user.getPassword())){
-            if(user.getPin().equals(request.getNewPin())){
+
+            if(request.getNewPin().equals(user.getPin())){
                 throw new RuntimeException("Your pin equals your new pin");
             }
             else{
